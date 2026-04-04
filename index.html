@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daily Bible Devotional</title>
+<style>
+body {font-family: Arial, sans-serif; text-align:center; background:#000; color:white; margin:0; height:100vh; display:flex; flex-direction:column; justify-content:center; align-items:center;}
+h1 {font-family:'Georgia', serif; font-size:3rem; color:#ffe4b5; text-shadow:2px2px15px rgba(0,0,0,0.7); margin-bottom:20px;}
+#dailyVerse {padding:15px; background:rgba(0,0,0,0.5); border-radius:10px; max-width:90%; margin-bottom:15px; font-family:Georgia, serif;}
+#quote {padding:15px; width:80%; border-radius:10px; font-size:1.3rem; font-weight:600; font-family:'Courier New', monospace; background:rgba(0,0,0,0.5); min-height:80px; opacity:0; transition:opacity 1s; display:none;}
+#verseLocation {margin-top:8px; font-size:1rem; opacity:0; transition:opacity 1s;}
+#quoteHint {margin:10px; padding:14px 22px; background:rgba(0,0,0,0.5); border-radius:20px; cursor:pointer; font-family:Georgia, serif;}
+</style>
+</head>
+<body>
+
+<h1>📖 Daily Bible Devotional</h1>
+<div id="dailyVerse">Loading daily verse…</div>
+<div id="quoteHint" onclick="startRandom()">Random Verse</div>
+<div id="quote"></div>
+<div id="verseLocation"></div>
+
+<script>
+// ===== Data =====
+const books=["Genesis","Exodus","Leviticus","Numbers","Deuteronomy","Joshua","Judges","Ruth","1 Samuel","2 Samuel","1 Kings","2 Kings","1 Chronicles","2 Chronicles","Ezra","Nehemiah","Esther","Job","Psalms","Proverbs","Ecclesiastes","Song of Solomon","Isaiah","Jeremiah","Lamentations","Ezekiel","Daniel","Hosea","Joel","Amos","Obadiah","Jonah","Micah","Nahum","Habakkuk","Zephaniah","Haggai","Zechariah","Malachi","Matthew","Mark","Luke","John","Acts","Romans","1 Corinthians","2 Corinthians","Galatians","Ephesians","Philippians","Colossians","1 Thessalonians","2 Thessalonians","1 Timothy","2 Timothy","Titus","Philemon","Hebrews","James","1 Peter","2 Peter","1 John","2 John","3 John","Jude","Revelation"];
+const bookChapters={"Genesis":50,"Exodus":40,"Leviticus":27,"Numbers":36,"Deuteronomy":34,"Joshua":24,"Judges":21,"Ruth":4,"1 Samuel":31,"2 Samuel":24,"1 Kings":22,"2 Kings":25,"1 Chronicles":29,"2 Chronicles":36,"Ezra":10,"Nehemiah":13,"Esther":10,"Job":42,"Psalms":150,"Proverbs":31,"Ecclesiastes":12,"Song of Solomon":8,"Isaiah":66,"Jeremiah":52,"Lamentations":5,"Ezekiel":48,"Daniel":12,"Hosea":14,"Joel":3,"Amos":9,"Obadiah":1,"Jonah":4,"Micah":7,"Nahum":3,"Habakkuk":3,"Zephaniah":3,"Haggai":2,"Zechariah":14,"Malachi":4,"Matthew":28,"Mark":16,"Luke":24,"John":21,"Acts":28,"Romans":16,"1 Corinthians":16,"2 Corinthians":13,"Galatians":6,"Ephesians":6,"Philippians":4,"Colossians":4,"1 Thessalonians":5,"2 Thessalonians":3,"1 Timothy":6,"2 Timothy":4,"Titus":3,"Philemon":1,"Hebrews":13,"James":5,"1 Peter":5,"2 Peter":3,"1 John":5,"2 John":1,"3 John":1,"Jude":1,"Revelation":22};
+
+let viewed = [], index = -1;
+let autoInterval = null, paused = false;
+
+// DOM
+const qt = document.getElementById('quote');
+const loc = document.getElementById('verseLocation');
+const daily = document.getElementById('dailyVerse');
+
+// ===== Helpers =====
+function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
+
+// Fetch via AllOrigins to fix CORS
+async function fetchVerse(book, chap, verse){
+  const target = `https://bible-api.com/${book}+${chap}:${verse}`;
+  const proxy  = `https://api.allorigins.win/raw?url=${encodeURIComponent(target)}`;
+  const res = await fetch(proxy);
+  return res.ok ? res.json() : null;
+}
+
+// Display with fade
+async function showVerse(v){
+  qt.style.display='block'; loc.style.display='block';
+  qt.style.opacity=0; loc.style.opacity=0;
+  await sleep(300);
+  qt.textContent = v.text;
+  loc.textContent = v.location.replace(' ',':');
+  qt.style.opacity=1; loc.style.opacity=1;
+}
+
+// ===== Random Verse Logic =====
+async function getRandomVerse(){
+  if(index < viewed.length - 1){
+    index++;
+    return viewed[index];
+  }
+  const book  = books[Math.floor(Math.random()*books.length)];
+  const chap  = Math.floor(Math.random()*bookChapters[book] + 1);
+  const verse = Math.floor(Math.random()*150 + 1);
+  const data  = await fetchVerse(book,chap,verse);
+  if(data && data.verses){
+    const v = data.verses[0];
+    const obj = {text:v.text.trim(), location:v.reference};
+    viewed.push(obj);
+    index = viewed.length - 1;
+    return obj;
+  }
+  return null;
+}
+
+// Auto 10s with fade
+async function nextAuto(){
+  if(paused) return;
+  const v = await getRandomVerse();
+  if(v) showVerse(v);
+}
+
+function startRandom(){
+  if(autoInterval) return;
+  nextAuto(); 
+  autoInterval = setInterval(nextAuto, 10000);
+}
+
+// Hold to pause
+qt.addEventListener('pointerdown', ()=> paused = true );
+qt.addEventListener('pointerup',   ()=> paused = false);
+
+// Swipe navigation
+let startX = 0;
+qt.addEventListener('touchstart', e=> startX = e.touches[0].clientX);
+qt.addEventListener('touchend', e=>{
+  const dx = e.changedTouches[0].clientX - startX;
+  if(dx > 30 && index > 0){ index--; showVerse(viewed[index]); }
+  if(dx < -30) nextAuto();
+});
+
+// Click to skip
+qt.addEventListener('click', ()=> nextAuto());
+
+// ===== Daily Verse at top =====
+async function loadDaily(){
+  const book  = books[Math.floor(Math.random()*books.length)];
+  const chap  = Math.floor(Math.random()*bookChapters[book] + 1);
+  const verse = Math.floor(Math.random()*150 + 1);
+  const data  = await fetchVerse(book,chap,verse);
+  if(data && data.verses){
+    const v = data.verses[0];
+    daily.textContent = v.text.trim() + " — " + v.reference.replace(' ',':');
+  } else {
+    daily.textContent = "Unable to load daily verse";
+  }
+}
+
+loadDaily();
+</script>
+
+</body>
+</html>
