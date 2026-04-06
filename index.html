@@ -99,7 +99,7 @@ h1{
 
 #prevArrow{
   position:absolute;
-  bottom:6%;
+  bottom:12%; /* lowered to avoid overlap */
   left:5%;
   font-size:2rem;
   color:white;
@@ -229,7 +229,6 @@ h1{
 </style>
 </head>
 <body>
-
 <div id="tutorialOverlay">
   <div>
     <h2>Welcome to Daily Bible Devotional 📖</h2>
@@ -344,9 +343,7 @@ async function getRandomVerse(){
       currentVerseIndex=viewedVerses.length-1;
       displayVerse(current);
     }
-  }catch(e){
-    quoteEl.textContent='Could not load verse.';
-  }
+  }catch(e){quoteEl.textContent='Could not load verse.';}
 }
 
 function toggleRandomVerse(){
@@ -359,9 +356,7 @@ quoteEl.addEventListener('click',()=>{
   else if(randomMode){getRandomVerse();}
 });
 
-let touchStartY=0;
-let touchStartX=0;
-
+let touchStartY=0; let touchStartX=0;
 function addSwipeFavorite(el, verseGetter){
   el.addEventListener('touchstart',(e)=>{touchStartY=e.changedTouches[0].clientY; touchStartX=e.changedTouches[0].clientX;});
   el.addEventListener('touchend',(e)=>{
@@ -390,23 +385,18 @@ function addSwipeFavorite(el, verseGetter){
   });
 }
 
-// Add swipe to both daily and random
+// Add swipe favorite
 addSwipeFavorite(quoteEl, ()=>viewedVerses[currentVerseIndex]);
-addSwipeFavorite(dailyVerse, ()=>{ 
+addSwipeFavorite(dailyVerse, ()=>{
   const dailyText=dailyVerse.querySelector('.verseText')?.textContent;
   const dailyLoc=dailyVerse.querySelector('.verseLocation')?.textContent.replace('— ','');
   return dailyText?{text:dailyText,location:dailyLoc}:null;
 });
 
-function showPreviousVerse(){
-  if(currentVerseIndex>0){currentVerseIndex--; displayVerse(viewedVerses[currentVerseIndex]);}
-}
-
+function showPreviousVerse(){if(currentVerseIndex>0){currentVerseIndex--; displayVerse(viewedVerses[currentVerseIndex]);}}
 function showToast(message){toast.textContent=message; toast.classList.add('show'); setTimeout(()=>toast.classList.remove('show'),1800);}
-
 function toggleHistoryPanel(){favoritesPanel.style.display='none'; historyPanel.style.display=historyPanel.style.display==='block'?'none':'block'; menuPanel.style.display='none';}
 function toggleFavoritesPanel(){historyPanel.style.display='none'; favoritesPanel.style.display=favoritesPanel.style.display==='block'?'none':'block'; menuPanel.style.display='none';}
-
 menuBtn.addEventListener('click',(e)=>{e.stopPropagation(); menuPanel.style.display=menuPanel.style.display==='block'?'none':'block';});
 document.addEventListener('click',(e)=>{
   if(!menuPanel.contains(e.target)&&e.target!==menuBtn){menuPanel.style.display='none';}
@@ -425,23 +415,35 @@ async function setDailyVerse(){
   }
 }
 
-function closeTutorial(){ tutorialOverlay.style.display='none'; }
+function closeTutorial(){tutorialOverlay.style.display='none';}
 
+// Background images
 const bgImages=[
   'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1470&q=80',
-  'https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?auto=format&fit=crop&w=1470&q=80'
+  'https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?auto=format&fit=crop&w=1470&q=80',
+  'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=crop&w=1470&q=80',
+  'https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&w=1470&q=80'
 ];
 
 let bgIndex=0;
 const slide1=document.getElementById('bgSlide');
 const slide2=document.getElementById('bgSlide2');
-function nextBg(){const current=bgIndex%2===0?slide1:slide2; const next=bgIndex%2===0?slide2:slide1; next.style.backgroundImage=`url(${bgImages[bgIndex%bgImages.length]})`; next.classList.add('show'); current.classList.remove('show'); bgIndex++;}
 
+function nextBg(){
+  const current=bgIndex%2===0?slide1:slide2;
+  const next=bgIndex%2===0?slide2:slide1;
+  next.style.backgroundImage=`url(${bgImages[bgIndex%bgImages.length]})`;
+  next.classList.add('show');
+  current.classList.remove('show');
+  bgIndex++;
+}
 nextBg();
 setInterval(nextBg,30000);
+
 renderHistory();
 renderFavorites();
 window.onload=setDailyVerse;
+
 </script>
 </body>
 </html>
