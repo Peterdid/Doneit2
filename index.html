@@ -5,121 +5,443 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Daily Bible Devotional</title>
 <style>
-body {font-family: Arial, sans-serif; text-align:center; background:#000; color:white; margin:0; height:100vh; display:flex; flex-direction:column; justify-content:center; align-items:center;}
-h1 {font-family:'Georgia', serif; font-size:3rem; color:#ffe4b5; text-shadow:2px2px15px rgba(0,0,0,0.7); margin-bottom:20px;}
-#dailyVerse {padding:15px; background:rgba(0,0,0,0.5); border-radius:10px; max-width:90%; margin-bottom:15px; font-family:Georgia, serif;}
-#quote {padding:15px; width:80%; border-radius:10px; font-size:1.3rem; font-weight:600; font-family:'Courier New', monospace; background:rgba(0,0,0,0.5); min-height:80px; opacity:0; transition:opacity 1s; display:none;}
-#verseLocation {margin-top:8px; font-size:1rem; opacity:0; transition:opacity 1s;}
-#quoteHint {margin:10px; padding:14px 22px; background:rgba(0,0,0,0.5); border-radius:20px; cursor:pointer; font-family:Georgia, serif;}
+body{
+  font-family:Arial,sans-serif;
+  text-align:center;
+  color:white;
+  margin:0;
+  overflow:hidden;
+  background:#000;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+}
+
+h1{
+  font-family:Georgia,serif;
+  font-size:3rem;
+  color:#ffe4b5;
+  text-shadow:2px 2px 15px rgba(0,0,0,.7);
+  margin-bottom:30px;
+  animation:glow 3s infinite alternate;
+}
+
+@keyframes glow{
+  0%{text-shadow:2px 2px 15px rgba(0,0,0,.7);color:#ffe4b5;}
+  50%{text-shadow:2px 2px 30px rgba(255,215,0,.8);color:#fffacd;}
+  100%{text-shadow:2px 2px 15px rgba(0,0,0,.7);color:#ffe4b5;}
+}
+
+#dailyVerse, #quote{
+  margin:0 auto 20px;
+  padding:15px;
+  background:rgba(0,0,0,.5);
+  border-radius:10px;
+  max-width:90%;
+  max-height:200px;
+  box-shadow:0 5px 15px rgba(0,0,0,.4);
+  cursor:pointer;
+  overflow:auto;
+  word-break:break-word;
+  overflow-wrap:break-word;
+  text-align:left;
+  font-size:1.05rem;
+}
+
+.verseText{
+  display:block;
+}
+
+.verseLocation{
+  display:block;
+  font-size:0.9rem;
+  font-style:italic;
+  color:#ffe4b5;
+  margin-top:8px;
+}
+
+#quoteHint{
+  font-size:1.05rem;
+  background:rgba(0,0,0,.5);
+  color:white;
+  display:inline-block;
+  padding:16px 24px;
+  border-radius:20px;
+  margin:10px;
+  cursor:pointer;
+  transition:transform .2s;
+  box-shadow:0 5px 15px rgba(0,0,0,.4);
+}
+
+#quoteHint:hover{transform:scale(1.02);}
+
+#toast{
+  position:fixed;
+  bottom:30px;
+  left:50%;
+  transform:translateX(-50%) translateY(20px);
+  background:rgba(0,0,0,.8);
+  color:#ffe066;
+  padding:12px 20px;
+  border-radius:20px;
+  font-size:.95rem;
+  opacity:0;
+  transition:all .35s ease;
+  z-index:1200;
+}
+
+#toast.show{
+  opacity:1;
+  transform:translateX(-50%) translateY(0);
+}
+
+#prevArrow{
+  position:absolute;
+  bottom:6%;
+  left:5%;
+  font-size:2rem;
+  color:white;
+  cursor:pointer;
+  display:none;
+  background:transparent;
+  border:none;
+}
+
+#menuBtn{
+  position:fixed;
+  top:18px;
+  right:18px;
+  width:48px;
+  height:48px;
+  border:none;
+  border-radius:50%;
+  background:rgba(0,0,0,.55);
+  color:white;
+  font-size:28px;
+  cursor:pointer;
+  z-index:1001;
+}
+
+#menuPanel{
+  position:fixed;
+  top:72px;
+  right:18px;
+  width:180px;
+  background:rgba(0,0,0,.78);
+  border-radius:14px;
+  display:none;
+  overflow:hidden;
+  z-index:1001;
+  backdrop-filter:blur(6px);
+}
+
+.menuItem{
+  padding:14px;
+  cursor:pointer;
+  text-align:left;
+  border-bottom:1px solid rgba(255,255,255,.1);
+}
+
+.menuItem:last-child{border-bottom:none;}
+.menuItem:hover{background:rgba(255,255,255,.08);}
+
+.panel{
+  position:fixed;
+  top:130px;
+  right:18px;
+  width:260px;
+  background:rgba(0,0,0,.78);
+  padding:12px;
+  border-radius:14px;
+  max-height:320px;
+  overflow-y:auto;
+  display:none;
+  z-index:1000;
+}
+
+.panel h3{
+  margin:0 0 10px;
+}
+
+.panel ul{
+  list-style:none;
+  padding:0;
+  margin:0;
+}
+
+.panel li{
+  padding:8px 0;
+  cursor:pointer;
+  border-bottom:1px solid rgba(255,255,255,.08);
+  font-size:.92rem;
+}
+
+.panel li:hover{
+  color:#ffe4b5;
+}
+
+#bgSlide,#bgSlide2{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  z-index:-1;
+  background-size:cover;
+  background-position:center;
+  transition:opacity 2s ease-in-out, transform 30s linear;
+  opacity:0;
+}
+
+#bgSlide.show,#bgSlide2.show{opacity:1;}
+
+#tutorialOverlay{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,.85);
+  color:white;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  padding:20px;
+  font-size:1.1rem;
+  z-index:2000;
+  flex-direction:column;
+}
+
+#tutorialOverlay button{
+  margin-top:20px;
+  padding:12px 20px;
+  border:none;
+  border-radius:10px;
+  font-size:1rem;
+  cursor:pointer;
+  background:#ffe066;
+  color:#000;
+  font-weight:bold;
+}
 </style>
 </head>
 <body>
 
+<div id="tutorialOverlay">
+  <div>
+    <h2>Welcome to Daily Bible Devotional 📖</h2>
+    <p>Swipe up on the daily verse or random verse to add it to your favorites.<br>
+    Tap the verse to see the next one in random mode.<br>
+    Access your history and favorites using the menu button.</p>
+    <button onclick="closeTutorial()">Got it!</button>
+  </div>
+</div>
+
+<button id="menuBtn">⋮</button>
+<div id="menuPanel">
+  <div class="menuItem" onclick="toggleHistoryPanel()">🕑 History</div>
+  <div class="menuItem" onclick="toggleFavoritesPanel()">💖 Favorites</div>
+</div>
+
 <h1>📖 Daily Bible Devotional</h1>
-<div id="dailyVerse">Loading daily verse…</div>
-<div id="quoteHint" onclick="startRandom()">Random Verse</div>
+<div id="dailyVerse">Loading daily verse...</div>
+<div id="quoteHint" onclick="toggleRandomVerse()">Random Verse</div>
 <div id="quote"></div>
-<div id="verseLocation"></div>
+<div id="toast"></div>
+<button id="prevArrow" onclick="showPreviousVerse()">←</button>
+
+<div id="historyPanel" class="panel">
+  <h3>🕑 History</h3>
+  <ul id="histList"></ul>
+</div>
+
+<div id="favoritesPanel" class="panel">
+  <h3>💖 Favorites</h3>
+  <ul id="favList"></ul>
+</div>
+
+<div id="bgSlide"></div>
+<div id="bgSlide2"></div>
 
 <script>
-// ===== Data =====
-const books=["Genesis","Exodus","Leviticus","Numbers","Deuteronomy","Joshua","Judges","Ruth","1 Samuel","2 Samuel","1 Kings","2 Kings","1 Chronicles","2 Chronicles","Ezra","Nehemiah","Esther","Job","Psalms","Proverbs","Ecclesiastes","Song of Solomon","Isaiah","Jeremiah","Lamentations","Ezekiel","Daniel","Hosea","Joel","Amos","Obadiah","Jonah","Micah","Nahum","Habakkuk","Zephaniah","Haggai","Zechariah","Malachi","Matthew","Mark","Luke","John","Acts","Romans","1 Corinthians","2 Corinthians","Galatians","Ephesians","Philippians","Colossians","1 Thessalonians","2 Thessalonians","1 Timothy","2 Timothy","Titus","Philemon","Hebrews","James","1 Peter","2 Peter","1 John","2 John","3 John","Jude","Revelation"];
-const bookChapters={"Genesis":50,"Exodus":40,"Leviticus":27,"Numbers":36,"Deuteronomy":34,"Joshua":24,"Judges":21,"Ruth":4,"1 Samuel":31,"2 Samuel":24,"1 Kings":22,"2 Kings":25,"1 Chronicles":29,"2 Chronicles":36,"Ezra":10,"Nehemiah":13,"Esther":10,"Job":42,"Psalms":150,"Proverbs":31,"Ecclesiastes":12,"Song of Solomon":8,"Isaiah":66,"Jeremiah":52,"Lamentations":5,"Ezekiel":48,"Daniel":12,"Hosea":14,"Joel":3,"Amos":9,"Obadiah":1,"Jonah":4,"Micah":7,"Nahum":3,"Habakkuk":3,"Zephaniah":3,"Haggai":2,"Zechariah":14,"Malachi":4,"Matthew":28,"Mark":16,"Luke":24,"John":21,"Acts":28,"Romans":16,"1 Corinthians":16,"2 Corinthians":13,"Galatians":6,"Ephesians":6,"Philippians":4,"Colossians":4,"1 Thessalonians":5,"2 Thessalonians":3,"1 Timothy":6,"2 Timothy":4,"Titus":3,"Philemon":1,"Hebrews":13,"James":5,"1 Peter":5,"2 Peter":3,"1 John":5,"2 John":1,"3 John":1,"Jude":1,"Revelation":22};
+const quoteEl=document.getElementById('quote');
+const dailyVerse=document.getElementById('dailyVerse');
+const prevArrow=document.getElementById('prevArrow');
+const histList=document.getElementById('histList');
+const favList=document.getElementById('favList');
+const menuBtn=document.getElementById('menuBtn');
+const menuPanel=document.getElementById('menuPanel');
+const historyPanel=document.getElementById('historyPanel');
+const favoritesPanel=document.getElementById('favoritesPanel');
+const toast=document.getElementById('toast');
+const tutorialOverlay=document.getElementById('tutorialOverlay');
 
-let viewed = [], index = -1;
-let autoInterval = null, paused = false;
+let viewedVerses=[];
+let currentVerseIndex=-1;
+let randomMode=false;
+let historyArr=JSON.parse(localStorage.getItem('history'))||[];
+let favoritesArr=JSON.parse(localStorage.getItem('favorites'))||[];
 
-// DOM
-const qt = document.getElementById('quote');
-const loc = document.getElementById('verseLocation');
-const daily = document.getElementById('dailyVerse');
+const books=['Genesis','Exodus','Leviticus','Numbers','Deuteronomy','Joshua','Judges','Ruth','1 Samuel','2 Samuel','1 Kings','2 Kings','Psalms','Proverbs','Isaiah','Jeremiah','Matthew','Mark','Luke','John','Romans','Philippians','James','1 Peter','Revelation'];
+const bookChapters={Genesis:50,Exodus:40,Leviticus:27,Numbers:36,Deuteronomy:34,Joshua:24,Judges:21,Ruth:4,'1 Samuel':31,'2 Samuel':24,'1 Kings':22,'2 Kings':25,Psalms:150,Proverbs:31,Isaiah:66,Jeremiah:52,Matthew:28,Mark:16,Luke:24,John:21,Romans:16,Philippians:4,James:5,'1 Peter':5,Revelation:22};
 
-// ===== Helpers =====
-function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
-
-// Fetch via AllOrigins to fix CORS
-async function fetchVerse(book, chap, verse){
-  const target = `https://bible-api.com/${book}+${chap}:${verse}`;
-  const proxy  = `https://api.allorigins.win/raw?url=${encodeURIComponent(target)}`;
-  const res = await fetch(proxy);
-  return res.ok ? res.json() : null;
+function displayVerse(v, fromSaved=false){
+  quoteEl.style.display='block';
+  quoteEl.innerHTML=`<span class="verseText">${v.text}</span><span class="verseLocation">— ${v.location}</span>`;
+  prevArrow.style.display=currentVerseIndex>0?'block':'none';
+  if(fromSaved){quoteEl.style.color='#ffe066';} else{quoteEl.style.color='white';}
+  if(!historyArr.find(item=>item.text===v.text)){
+    historyArr.unshift(v);
+    localStorage.setItem('history',JSON.stringify(historyArr));
+    renderHistory();
+  }
 }
 
-// Display with fade
-async function showVerse(v){
-  qt.style.display='block'; loc.style.display='block';
-  qt.style.opacity=0; loc.style.opacity=0;
-  await sleep(300);
-  qt.textContent = v.text;
-  loc.textContent = v.location.replace(' ',':');
-  qt.style.opacity=1; loc.style.opacity=1;
+function renderHistory(){
+  histList.innerHTML='';
+  historyArr.forEach(v=>{
+    const li=document.createElement('li');
+    li.textContent=v.text+' — '+v.location;
+    li.onclick=()=>displayVerse(v,true);
+    histList.appendChild(li);
+  });
 }
 
-// ===== Random Verse Logic =====
+function renderFavorites(){
+  favList.innerHTML='';
+  favoritesArr.forEach(v=>{
+    const li=document.createElement('li');
+    li.textContent=v.text+' — '+v.location;
+    li.onclick=()=>displayVerse(v,true);
+    let startX=0;
+    li.addEventListener('touchstart',(e)=>{startX=e.changedTouches[0].clientX;});
+    li.addEventListener('touchend',(e)=>{
+      const endX=e.changedTouches[0].clientX;
+      if(startX-endX>50){
+        favoritesArr=favoritesArr.filter(item=>item.text!==v.text);
+        localStorage.setItem('favorites',JSON.stringify(favoritesArr));
+        renderFavorites();
+        showToast('Removed from favorites');
+      }
+    });
+    favList.appendChild(li);
+  });
+}
+
 async function getRandomVerse(){
-  if(index < viewed.length - 1){
-    index++;
-    return viewed[index];
+  const book=books[Math.floor(Math.random()*books.length)];
+  const chapter=Math.floor(Math.random()*bookChapters[book])+1;
+  try{
+    const res=await fetch(`https://bible-api.com/${encodeURIComponent(book+' '+chapter)}`);
+    const data=await res.json();
+    if(data.verses&&data.verses.length){
+      const verse=data.verses[Math.floor(Math.random()*data.verses.length)];
+      const current={text:verse.text.trim(),location:verse.reference||`${book} ${chapter}`};
+      viewedVerses.push(current);
+      currentVerseIndex=viewedVerses.length-1;
+      displayVerse(current);
+    }
+  }catch(e){
+    quoteEl.textContent='Could not load verse.';
   }
-  const book  = books[Math.floor(Math.random()*books.length)];
-  const chap  = Math.floor(Math.random()*bookChapters[book] + 1);
-  const verse = Math.floor(Math.random()*150 + 1);
-  const data  = await fetchVerse(book,chap,verse);
-  if(data && data.verses){
-    const v = data.verses[0];
-    const obj = {text:v.text.trim(), location:v.reference};
-    viewed.push(obj);
-    index = viewed.length - 1;
-    return obj;
-  }
-  return null;
 }
 
-// Auto 10s with fade
-async function nextAuto(){
-  if(paused) return;
-  const v = await getRandomVerse();
-  if(v) showVerse(v);
+function toggleRandomVerse(){
+  if(!randomMode){randomMode=true; getRandomVerse();}
+  else{randomMode=false; quoteEl.style.display='none'; prevArrow.style.display='none';}
 }
 
-function startRandom(){
-  if(autoInterval) return;
-  nextAuto(); 
-  autoInterval = setInterval(nextAuto, 10000);
-}
-
-// Hold to pause
-qt.addEventListener('pointerdown', ()=> paused = true );
-qt.addEventListener('pointerup',   ()=> paused = false);
-
-// Swipe navigation
-let startX = 0;
-qt.addEventListener('touchstart', e=> startX = e.touches[0].clientX);
-qt.addEventListener('touchend', e=>{
-  const dx = e.changedTouches[0].clientX - startX;
-  if(dx > 30 && index > 0){ index--; showVerse(viewed[index]); }
-  if(dx < -30) nextAuto();
+quoteEl.addEventListener('click',()=>{
+  if(currentVerseIndex<viewedVerses.length-1){currentVerseIndex++; displayVerse(viewedVerses[currentVerseIndex]);}
+  else if(randomMode){getRandomVerse();}
 });
 
-// Click to skip
-qt.addEventListener('click', ()=> nextAuto());
+let touchStartY=0;
+let touchStartX=0;
 
-// ===== Daily Verse at top =====
-async function loadDaily(){
-  const book  = books[Math.floor(Math.random()*books.length)];
-  const chap  = Math.floor(Math.random()*bookChapters[book] + 1);
-  const verse = Math.floor(Math.random()*150 + 1);
-  const data  = await fetchVerse(book,chap,verse);
-  if(data && data.verses){
-    const v = data.verses[0];
-    daily.textContent = v.text.trim() + " — " + v.reference.replace(' ',':');
-  } else {
-    daily.textContent = "Unable to load daily verse";
+function addSwipeFavorite(el, verseGetter){
+  el.addEventListener('touchstart',(e)=>{touchStartY=e.changedTouches[0].clientY; touchStartX=e.changedTouches[0].clientX;});
+  el.addEventListener('touchend',(e)=>{
+    const touchEndY=e.changedTouches[0].clientY;
+    const touchEndX=e.changedTouches[0].clientX;
+    const swipeUpDistance=touchStartY-touchEndY;
+    const swipeLeftDistance=touchStartX-touchEndX;
+    const verse=verseGetter();
+    if(swipeUpDistance>50){
+      if(verse && !favoritesArr.find(v=>v.text===verse.text)){
+        favoritesArr.unshift(verse);
+        localStorage.setItem('favorites',JSON.stringify(favoritesArr));
+        renderFavorites();
+        showToast('Added to favorites');
+      }
+      return;
+    }
+    if(swipeLeftDistance>50){
+      if(verse && favoritesArr.find(v=>v.text===verse.text)){
+        favoritesArr=favoritesArr.filter(v=>v.text!==verse.text);
+        localStorage.setItem('favorites',JSON.stringify(favoritesArr));
+        renderFavorites();
+        showToast('Removed from favorites');
+      }
+    }
+  });
+}
+
+// Add swipe to both daily and random
+addSwipeFavorite(quoteEl, ()=>viewedVerses[currentVerseIndex]);
+addSwipeFavorite(dailyVerse, ()=>{ 
+  const dailyText=dailyVerse.querySelector('.verseText')?.textContent;
+  const dailyLoc=dailyVerse.querySelector('.verseLocation')?.textContent.replace('— ','');
+  return dailyText?{text:dailyText,location:dailyLoc}:null;
+});
+
+function showPreviousVerse(){
+  if(currentVerseIndex>0){currentVerseIndex--; displayVerse(viewedVerses[currentVerseIndex]);}
+}
+
+function showToast(message){toast.textContent=message; toast.classList.add('show'); setTimeout(()=>toast.classList.remove('show'),1800);}
+
+function toggleHistoryPanel(){favoritesPanel.style.display='none'; historyPanel.style.display=historyPanel.style.display==='block'?'none':'block'; menuPanel.style.display='none';}
+function toggleFavoritesPanel(){historyPanel.style.display='none'; favoritesPanel.style.display=favoritesPanel.style.display==='block'?'none':'block'; menuPanel.style.display='none';}
+
+menuBtn.addEventListener('click',(e)=>{e.stopPropagation(); menuPanel.style.display=menuPanel.style.display==='block'?'none':'block';});
+document.addEventListener('click',(e)=>{
+  if(!menuPanel.contains(e.target)&&e.target!==menuBtn){menuPanel.style.display='none';}
+  if(!historyPanel.contains(e.target)&&!menuPanel.contains(e.target)){historyPanel.style.display='none';}
+  if(!favoritesPanel.contains(e.target)&&!menuPanel.contains(e.target)){favoritesPanel.style.display='none';}
+});
+
+async function setDailyVerse(){
+  await getRandomVerse();
+  if(viewedVerses.length){
+    const verse=viewedVerses[viewedVerses.length-1];
+    dailyVerse.innerHTML=`<span class="verseText">${verse.text}</span><span class="verseLocation">— ${verse.location}</span>`;
+    quoteEl.style.display='none';
+    prevArrow.style.display='none';
+    randomMode=false;
   }
 }
 
-loadDaily();
-</script>
+function closeTutorial(){ tutorialOverlay.style.display='none'; }
 
+const bgImages=[
+  'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1470&q=80',
+  'https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?auto=format&fit=crop&w=1470&q=80'
+];
+
+let bgIndex=0;
+const slide1=document.getElementById('bgSlide');
+const slide2=document.getElementById('bgSlide2');
+function nextBg(){const current=bgIndex%2===0?slide1:slide2; const next=bgIndex%2===0?slide2:slide1; next.style.backgroundImage=`url(${bgImages[bgIndex%bgImages.length]})`; next.classList.add('show'); current.classList.remove('show'); bgIndex++;}
+
+nextBg();
+setInterval(nextBg,30000);
+renderHistory();
+renderFavorites();
+window.onload=setDailyVerse;
+</script>
 </body>
 </html>
