@@ -345,7 +345,7 @@ async function getRandomVerse(){
     const data=await res.json();
     if(data.verses&&data.verses.length){
       const verse=data.verses[Math.floor(Math.random()*data.verses.length)];
-      const current={text:verse.text.trim(),location:verse.reference||`${book} ${chapter}`};
+      const current={text:verse.text.trim(),location:`${verse.book_name} ${verse.chapter}:${verse.verse}`};
       viewedVerses.push(current);
       currentVerseIndex=viewedVerses.length-1;
       displayVerse(current);
