@@ -453,7 +453,30 @@ renderHistory();
 renderFavorites();
 requestNotificationPermission();
 window.onload=setDailyVerse;
+function scheduleDailyNotification() {
+  const verse = JSON.parse(localStorage.getItem('dailyVerseNotification'));
+  if (!verse) return; // stop if no verse saved
 
+  const now = new Date();
+  const notificationTime = new Date();
+  notificationTime.setHours(8, 0, 0, 0); // 8:00 AM today
+
+  if (now > notificationTime) {
+    notificationTime.setDate(notificationTime.getDate() + 1); // tomorrow
+  }
+
+  const delay = notificationTime - now;
+
+  setTimeout(() => {
+    new Notification("📖 Daily Verse", {
+      body: `${verse.text} — ${verse.location}`,
+      icon: "icon-192.png"
+    });
+
+    // Schedule the next day's notification
+    scheduleDailyNotification();
+  }, delay);
+  }
 </script>
   <script>
 if ('serviceWorker' in navigator) {
