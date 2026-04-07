@@ -494,22 +494,19 @@ function sendDailyNotification(){
   }
 }
 
-window.onload = async () => {
-  await setDailyVerse();
-  await requestNotificationPermission();
-
-  // wait briefly so the verse appears first
-  setTimeout(sendDailyNotification, 1500);
-};
-
 </script>
   <script>
 if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/Doneit2/sw.js')
-      .then(() => console.log('Service Worker Registered'))
-      .catch(err => console.log(err));
-  });
+  navigator.serviceWorker.register('/Doneit2/sw.js')
+    .then(async reg => {
+      console.log('Service Worker Registered');
+
+      await setDailyVerse();
+      await requestNotificationPermission();
+
+      setTimeout(sendDailyNotification, 1500);
+    })
+    .catch(err => console.log(err));
 }
   </script>
 </body>
