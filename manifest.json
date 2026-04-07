@@ -1,7 +1,7 @@
 {
   "name": "Daily Bible Devotional",
   "short_name": "BibleDev",
-  "description": "Get a daily Bible verse, add favorites, and explore random verses anytime.",
+  "description": "Get a daily Bible verse, add favorites, explore history and random verses.",
   "start_url": "/Doneit2/",
   "display": "standalone",
   "orientation": "portrait",
@@ -9,14 +9,34 @@
   "theme_color": "#ffe4b5",
   "icons": [
     {
-      "src": "icons/icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png"
+      "src": "/Doneit2/icons/icon-72x72.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "any"
     },
     {
-      "src": "icons/icon-512.png",
+      "src": "/Doneit2/icons/icon-144x144.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/Doneit2/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/Doneit2/icons/icon-384x384.png",
+      "sizes": "384x384",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/Doneit2/icons/icon-512x512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ],
   "shortcuts": [
@@ -27,7 +47,7 @@
       "url": "/Doneit2/",
       "icons": [
         {
-          "src": "icons/icon-192.png",
+          "src": "/Doneit2/icons/icon-192x192.png",
           "sizes": "192x192"
         }
       ]
@@ -39,7 +59,7 @@
       "url": "/Doneit2/#favorites",
       "icons": [
         {
-          "src": "icons/icon-192.png",
+          "src": "/Doneit2/icons/icon-192x192.png",
           "sizes": "192x192"
         }
       ]
