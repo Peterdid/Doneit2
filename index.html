@@ -494,7 +494,13 @@ function sendDailyNotification(){
   }
 }
 
-window.onload=setDailyVerse;
+window.onload = async () => {
+  await setDailyVerse();
+  await requestNotificationPermission();
+
+  // wait briefly so the verse appears first
+  setTimeout(sendDailyNotification, 1500);
+};
 
 </script>
   <script>
