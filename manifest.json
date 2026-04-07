@@ -1,20 +1,48 @@
 {
   "name": "Daily Bible Devotional",
   "short_name": "BibleDev",
+  "description": "Get a daily Bible verse, add favorites, and explore random verses anytime.",
   "start_url": "/Doneit2/",
   "display": "standalone",
+  "orientation": "portrait",
   "background_color": "#000000",
   "theme_color": "#ffe4b5",
   "icons": [
     {
-      "src": "icon-192.png",
+      "src": "icons/icon-192.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "icon-512.png",
+      "src": "icons/icon-512.png",
       "sizes": "512x512",
       "type": "image/png"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Today's Verse",
+      "short_name": "Daily Verse",
+      "description": "View today's Bible verse",
+      "url": "/Doneit2/",
+      "icons": [
+        {
+          "src": "icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Favorites",
+      "short_name": "Favorites",
+      "description": "View your saved favorite verses",
+      "url": "/Doneit2/#favorites",
+      "icons": [
+        {
+          "src": "icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
     }
   ]
 }
