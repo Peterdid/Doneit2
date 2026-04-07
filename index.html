@@ -449,6 +449,51 @@ setInterval(nextBg,30000);
 
 renderHistory();
 renderFavorites();
+// Ask for notification permission
+async function requestNotificationPermission(){
+  if('Notification' in window){
+    const permission = await Notification.requestPermission();
+    console.log('Notification permission:', permission);
+  }
+}
+
+// Show the daily verse notification
+function showDailyVerseNotification(verse){
+  if(Notification.permission === 'granted'){
+    navigator.serviceWorker.getRegistration().then(reg => {
+      if(reg){
+        reg.showNotification('📖 Daily Bible Verse', {
+          body: `${verse.text} — ${verse.location}`,
+          icon: 'icon-192.png',
+          badge: 'icon-192.png',
+          vibrate: [200,100,200],
+          tag: 'daily-bible-verse'
+        });
+      }
+    });
+  }
+}
+
+// Only send one notification per day
+function sendDailyNotification(){
+  const today = new Date().toDateString();
+  const lastSent = localStorage.getItem('lastNotificationDate');
+
+  if(lastSent !== today){
+    const dailyText = dailyVerse.querySelector('.verseText')?.textContent;
+    const dailyLoc = dailyVerse.querySelector('.verseLocation')?.textContent.replace('— ','');
+
+    if(dailyText && dailyLoc){
+      showDailyVerseNotification({
+        text: dailyText,
+        location: dailyLoc
+      });
+
+      localStorage.setItem('lastNotificationDate', today);
+    }
+  }
+}
+
 window.onload=setDailyVerse;
 
 </script>
