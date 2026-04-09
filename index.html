@@ -20,226 +20,237 @@
 
   
 <style>
-body{
-  font-family:Arial,sans-serif;
-  text-align:center;
-  color:white;
-  margin:0;
-  overflow:hidden;
-  background:#000;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-  height:100vh;
+/* BODY & GENERAL */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+  color: white;
+  background: #000;
+  overflow-x: hidden;
+  min-height: 100vh;
 }
 
-h1{
-  font-family:Georgia,serif;
-  font-size:3rem;
-  color:#ffe4b5;
-  text-shadow:2px 2px 15px rgba(0,0,0,.7);
-  margin-bottom:30px;
-  animation:glow 3s infinite alternate;
+/* TITLE */
+h1 {
+  font-family: Georgia, serif;
+  font-size: 3rem;
+  color: #ffe4b5;
+  text-shadow: 2px 2px 15px rgba(0,0,0,0.7);
+  margin: 30px 0;
+  animation: glow 3s infinite alternate;
 }
 
-@keyframes glow{
-  0%{text-shadow:2px 2px 15px rgba(0,0,0,.7);color:#ffe4b5;}
-  50%{text-shadow:2px 2px 30px rgba(255,215,0,.8);color:#fffacd;}
-  100%{text-shadow:2px 2px 15px rgba(0,0,0,.7);color:#ffe4b5;}
+@keyframes glow {
+  0% { text-shadow: 2px 2px 15px rgba(0,0,0,0.7); color: #ffe4b5; }
+  50% { text-shadow: 2px 2px 30px rgba(255,215,0,0.8); color: #fffacd; }
+  100% { text-shadow: 2px 2px 15px rgba(0,0,0,0.7); color: #ffe4b5; }
 }
 
-#dailyVerse, #quote{
-  margin:0 auto 20px;
-  padding:15px;
-  background:rgba(0,0,0,.5);
-  border-radius:10px;
-  max-width:90%;
-  max-height:200px;
-  box-shadow:0 5px 15px rgba(0,0,0,.4);
-  cursor:pointer;
-  overflow:auto;
-  word-break:break-word;
-  overflow-wrap:break-word;
-  text-align:left;
-  font-size:1.05rem;
+/* DAILY VERSE & RANDOM VERSE */
+#dailyVerse, #quote {
+  margin: 0 auto 25px;
+  padding: 20px;
+  max-width: 90%;
+  min-height: 180px;
+  background: rgba(0,0,0,0.5);
+  border-radius: 12px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.4);
+  font-size: 1.25rem;
+  text-align: left;
+  word-break: break-word;
+  overflow-y: auto;
 }
 
-.verseText{
-  display:block;
+.verseText {
+  display: block;
 }
 
-.verseLocation{
-  display:block;
-  font-size:0.9rem;
-  font-style:italic;
-  color:#ffe4b5;
-  margin-top:8px;
+.verseLocation {
+  display: block;
+  margin-top: 8px;
+  font-size: 1rem;
+  font-style: italic;
+  color: #ffe4b5;
 }
 
-#quoteHint{
-  font-size:1.05rem;
-  background:rgba(0,0,0,.5);
-  color:white;
-  display:inline-block;
-  padding:16px 24px;
-  border-radius:20px;
-  margin:10px;
-  cursor:pointer;
-  transition:transform .2s;
-  box-shadow:0 5px 15px rgba(0,0,0,.4);
+/* RANDOM VERSE BUTTON */
+#quoteHint {
+  font-size: 1.2rem;
+  padding: 16px 28px;
+  border-radius: 24px;
+  background: rgba(0,0,0,0.55);
+  cursor: pointer;
+  display: inline-block;
+  margin-bottom: 25px;
+  transition: transform 0.2s;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.4);
 }
 
-#quoteHint:hover{transform:scale(1.02);}
-
-#toast{
-  position:fixed;
-  bottom:30px;
-  left:50%;
-  transform:translateX(-50%) translateY(20px);
-  background:rgba(0,0,0,.8);
-  color:#ffe066;
-  padding:12px 20px;
-  border-radius:20px;
-  font-size:.95rem;
-  opacity:0;
-  transition:all .35s ease;
-  z-index:1200;
+#quoteHint:hover {
+  transform: scale(1.05);
 }
 
-#toast.show{
-  opacity:1;
-  transform:translateX(-50%) translateY(0);
+/* TOAST */
+#toast {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: rgba(0,0,0,0.85);
+  color: #ffe066;
+  padding: 14px 24px;
+  border-radius: 22px;
+  font-size: 1rem;
+  opacity: 0;
+  transition: all 0.35s ease;
+  z-index: 1200;
 }
 
-#prevArrow{
-  position:absolute;
-  left:5%;
-  bottom:1%;
-  font-size:2rem;
-  color:white;
-  background:none;
-  border:none;
-  z-index:10;
+#toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
 }
 
-#menuBtn{
-  position:fixed;
-  top:18px;
-  right:18px;
-  width:48px;
-  height:48px;
-  border:none;
-  border-radius:50%;
-  background:rgba(0,0,0,.55);
-  color:white;
-  font-size:28px;
-  cursor:pointer;
-  z-index:1001;
+/* MENU BUTTON */
+#menuBtn {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  width: 56px;
+  height: 56px;
+  font-size: 32px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.55);
+  color: white;
+  cursor: pointer;
+  z-index: 1001;
 }
 
-#menuPanel{
-  position:fixed;
-  top:72px;
-  right:18px;
-  width:180px;
-  background:rgba(0,0,0,.78);
-  border-radius:14px;
-  display:none;
-  overflow:hidden;
-  z-index:1001;
-  backdrop-filter:blur(6px);
+/* MENU PANEL */
+#menuPanel {
+  position: fixed;
+  top: 78px;
+  right: 20px;
+  width: 200px;
+  background: rgba(0,0,0,0.78);
+  border-radius: 14px;
+  display: none;
+  overflow: hidden;
+  backdrop-filter: blur(6px);
+  z-index: 1001;
 }
 
-.menuItem{
-  padding:14px;
-  cursor:pointer;
-  text-align:left;
-  border-bottom:1px solid rgba(255,255,255,.1);
+.menuItem {
+  padding: 14px 12px;
+  cursor: pointer;
+  text-align: left;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  font-size: 1rem;
 }
 
-.menuItem:last-child{border-bottom:none;}
-.menuItem:hover{background:rgba(255,255,255,.08);}
+.menuItem:last-child { border-bottom: none; }
+.menuItem:hover { background: rgba(255,255,255,0.08); }
 
-.panel{
-  position:fixed;
-  top:130px;
-  right:18px;
-  width:260px;
-  background:rgba(0,0,0,.78);
-  padding:12px;
-  border-radius:14px;
-  max-height:320px;
-  overflow-y:auto;
-  display:none;
-  z-index:1000;
+/* PANELS (History / Favorites) */
+.panel {
+  position: fixed;
+  top: 140px;
+  right: 20px;
+  width: 320px;
+  max-height: 70vh;
+  background: rgba(0,0,0,0.78);
+  border-radius: 14px;
+  padding: 12px;
+  overflow-y: auto;
+  display: none;
+  z-index: 1000;
 }
 
-.panel h3{
-  margin:0 0 10px;
+.panel h3 {
+  margin: 0 0 12px;
+  font-size: 1.2rem;
 }
 
-.panel ul{
-  list-style:none;
-  padding:0;
-  margin:0;
+.panel ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
-.panel li{
-  padding:8px 0;
-  cursor:pointer;
-  border-bottom:1px solid rgba(255,255,255,.08);
-  font-size:.92rem;
+.panel li {
+  padding: 10px 0;
+  cursor: pointer;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  font-size: 1rem;
 }
 
-.panel li:hover{
-  color:#ffe4b5;
+.panel li:hover {
+  color: #ffe4b5;
 }
 
-#bgSlide,#bgSlide2{
-  position:fixed;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
-  z-index:-1;
-  background-size:cover;
-  background-position:center;
-  transition:opacity 2s ease-in-out, transform 30s linear;
-  opacity:0;
+/* PREVIOUS ARROW */
+#prevArrow {
+  position: fixed;
+  left: 20px;
+  bottom: 20px;
+  font-size: 2.5rem;
+  color: white;
+  background: none;
+  border: none;
+  z-index: 10;
 }
 
-#bgSlide.show,#bgSlide2.show{opacity:1;}
-
-#tutorialOverlay{
-  position:fixed;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
-  background:rgba(0,0,0,.85);
-  color:white;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  text-align:center;
-  padding:20px;
-  font-size:1.1rem;
-  z-index:2000;
-  flex-direction:column;
+/* BACKGROUND SLIDES */
+#bgSlide, #bgSlide2 {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  background-size: cover;
+  background-position: center;
+  transition: opacity 2s ease-in-out, transform 30s linear;
+  opacity: 0;
 }
 
-#tutorialOverlay button{
-  margin-top:20px;
-  padding:12px 20px;
-  border:none;
-  border-radius:10px;
-  font-size:1rem;
-  cursor:pointer;
-  background:#ffe066;
-  color:#000;
-  font-weight:bold;
+#bgSlide.show, #bgSlide2.show { opacity: 1; }
+
+/* TUTORIAL OVERLAY */
+#tutorialOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.85);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 20px;
+  font-size: 1.1rem;
+  z-index: 2000;
 }
+
+#tutorialOverlay button {
+  margin-top: 20px;
+  padding: 14px 28px;
+  border: none;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  background: #ffe066;
+  color: #000;
+  font-weight: bold;
+}
+
+ 
 </style>
 </head>
 <body>
