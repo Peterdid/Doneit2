@@ -446,7 +446,7 @@ async function setDailyVerse(){
   await getRandomVerse();
   if(viewedVerses.length){
     const verse=viewedVerses[viewedVerses.length-1];
-    dailyVerse.innerHTML=`<span class="verseText">${verse.text}</span><span class="verseLocation">— ${verse.location}</span>`;
+  dailyVerse.querySelector('#dailyVerseText').innerHTML = `<span class="verseText">${verse.text}</span><span class="verseLocation">— ${verse.location}</span>`;
     quoteEl.style.display='none';
     prevArrow.style.display='none';
     randomMode=false;
