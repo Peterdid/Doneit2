@@ -53,16 +53,15 @@ h1 {
   margin: 0 auto 25px;
   padding: 20px;
   max-width: 90%;
-  min-height: 180px;
   background: rgba(0,0,0,0.5);
   border-radius: 12px;
   box-shadow: 0 5px 20px rgba(0,0,0,0.4);
   font-size: 1.25rem;
   text-align: left;
   word-break: break-word;
-  overflow-y: auto;
+  white-space: pre-wrap; /* ensures the text wraps properly */
+  overflow: visible;     /* removes scrolling */
 }
-
 .verseText {
   display: block;
 }
