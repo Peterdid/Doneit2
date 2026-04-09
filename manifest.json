@@ -1,36 +1,66 @@
+Manifest.json
+
+
 {
   "name": "Daily Bible Devotional",
   "short_name": "BibleDev",
   "description": "Get a daily Bible verse, add favorites, explore history and random verses.",
-  "start_url": "/Doneit2/index.html",
+  "start_url": "/Doneit2/",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#000000",
   "theme_color": "#ffe4b5",
   "icons": [
-    { "src": "/Doneit2/icons/icon-16.png", "sizes": "16x16", "type": "image/png", "purpose": "any" },
-    { "src": "/Doneit2/icons/icon-32.png", "sizes": "32x32", "type": "image/png", "purpose": "any" },
-    { "src": "/Doneit2/icons/icon-180.png", "sizes": "180x180", "type": "image/png", "purpose": "any" },
-    { "src": "/Doneit2/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
-    { "src": "/Doneit2/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+    {
+      "src": "/Doneit2/icons/icon-16x16.png",
+      "sizes": "16x16",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/Doneit2/icons/icon-32x32.png",
+      "sizes": "32x32",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/Doneit2/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/Doneit2/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
   ],
   "shortcuts": [
     {
       "name": "Today's Verse",
       "short_name": "Daily Verse",
       "description": "View today's Bible verse",
-      "url": "/Doneit2/index.html",
+      "url": "/Doneit2/",
       "icons": [
-        { "src": "/Doneit2/icons/icon-192.png", "sizes": "192x192", "type": "image/png" }
+        {
+          "src": "/Doneit2/icons/icon-192x192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
       ]
     },
     {
       "name": "Favorites",
       "short_name": "Favorites",
       "description": "View your saved favorite verses",
-      "url": "/Doneit2/index.html#favorites",
+      "url": "/Doneit2/#favorites",
       "icons": [
-        { "src": "/Doneit2/icons/icon-192.png", "sizes": "192x192", "type": "image/png" }
+        {
+          "src": "/Doneit2/icons/icon-192x192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
       ]
     }
   ]
